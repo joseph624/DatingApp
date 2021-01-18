@@ -39,6 +39,10 @@ export class AccountService {
   }
 
   setCurrentuser(user: User) {
+    user.roles = [];
+    const roles = this.getDecodedToken(user.token).role;
+    // check if roles is array or single string
+    Array.isArray(roles) ? user.roles = roles : user.roles.push(roles);
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
   }
@@ -46,5 +50,10 @@ export class AccountService {
   logout() {
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
+  }
+
+  getDecodedToken(token) {
+    // specify 1 to get the middle piece of token
+    return JSON.parse(atob(token.split('.')[1]));
   }
 }
