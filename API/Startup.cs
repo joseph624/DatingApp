@@ -58,11 +58,15 @@ namespace API
 
             app.UseAuthorization();
 
+            app.UseDefaultFiles(); // for production of static files
+            app.UseStaticFiles(); // for production of static fileds
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<PresenceHub>("hubs/presence"); // route this presence hub will be accessed from
                 endpoints.MapHub<MessageHub>("hubs/message"); // route this message hub will be accessed from
+                endpoints.MapFallbackToController("Index", "Fallback"); // endpoint for route fallback
             });
         }
     }
